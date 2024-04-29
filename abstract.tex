@@ -1,12 +1,19 @@
 \documentclass{icsc}
 
+\usepackage{booktabs}  % nice tables
+\usepackage{natbib}
+\usepackage{siunitx}  % use for all units
+\usepackage{subcaption}  % for subfigures
+
+\def\kph{\kilo\meter\per\hour}
+
 \pagestyle{empty}
 
 \begin{document}
 
 \begin{center}
   \fontsize{14}{20}{\bf Balance Assist Bicycle Reduces Undesired Motions and
-  Reduces Fall Probablity when Subject to Perturbations\\[3pt]}
+    Fall Probablity when Subject to Disturbances\\[3pt]}
 \end{center}
 
 %%%%%%%%%%%%%%%% authors %%%%%%%%%%%%%%%
@@ -51,75 +58,77 @@ experiment, we perturb straight line riding via a kickplate, which slides the
 ground out under the front wheel of the bicycle to see differences in recovery
 response with and without balance assist.
 
-\section{GENERAL INSTRUCTIONS}
+\section{METHODS}
 %
-The abstract must be written in English. It must contain the name, address and
-e-mail address of each author. The abstract should be no longer than three
-pages including references. All page margins should be 1''. The paper used
-should have the size 210\,x\,297\, mm which is the European (German) A4 size.
-It is suggested to use styles for formatting and automatic reference, figure
-numbering to avoid editorial errors. To avoid compatibility problems it is
-advised to use only upper or lower case Latin alphabet, numbers and the
-underscore character in the file name.
-
-\subsection{Equations}
+To design the controller we utlized the linear Carvallo-Whipple bicycle model.
+The states are the roll angle \(\phi\) and steer angle \(\delta\) along with
+their derivatives and the inputs are roll torque \(T_\phi\) and steer torque
+\(T_\delta\). The state \(\mathbf{A}\) and input \(\mathbf{B} =
+\begin{bmatrix}\mathbf{B}_\delta \quad \mathbf{B}_\delta\end{bmatrix} \)
+matrices are functions of the equilbirum forward speed \(v\). The applied
+steering torque \(T_\delta\) is the sum of the (h)uman and (m)otor torques,
+with the motor torque following a proportional roll rate feedback law:
 %
-Equations should be numbered continuously according to the format shown in
-Equation~(\ref{eq:equ1}):
-\begin{equation} \label{eq:equ1}
-  e^{i\pi} + 1 = 0,
-\end{equation}
-
-where the unknown symbols are explained after the equation.
-
-\subsection{Figures and tables}
+\begin{align}
+  T_\delta =
+  T_\delta^\textrm{h} + T_\delta^\textrm{m} =
+  T_\delta^\textrm{h} - k_{\dot{\phi}}(v - v_\textrm{weave})\dot{\phi}
+\end{align}
+where \(v_\textrm{weave}\) is the open loop weave critical speed which gives
+the model with the automatic control:
 %
-\begin{table}[h!]
+\begin{align}
+  \dot{\vec{x}} =
+  \left(
+    \mathbf{A} - \mathbf{B}_\delta
+    \left[0 \quad k_{\dot{\phi}}(v - v_\textrm{weave}) \quad 0 \quad 0\right]
+  \right)
+\vec{x} + \begin{bmatrix}\mathbf{B}_\delta \quad \mathbf{B}_\delta\end{bmatrix}
+\begin{bmatrix} T_{\phi} \\ T_\delta^\textrm{h} \end{bmatrix}
+\label{eq:state-space}
+\end{align}
+
+The gain \(k_{\dot{\phi}}\) can be selected such that the eigenvalues of
+Equation~\ref{eq:state-space} have negative real parts for a range of speeds.
+
+We developed a series of three experiments to assess whether stabilizing the
+bicycle is beneficial in safety critical scenarios:
+\begin{description}
+  \item[Experiment 1] Comparison of 18 older and 14 younger adults in straight
+    line riding when 1) asked to look over their shoulder and 2) subjected
+    handlebar motor perturbations with the balance assist system on and off. We
+    measured the standard deviation of their steer and roll motions after the
+    disturbances.
+  \item[Experiment 2] Twenty-six young adults were subjected to externally
+    applied and measured handlebar torques of varying magnitudes while riding
+    on a treadmill at low speeds 6~\si{\kph} and 10~\si{\kph} to determine the
+    magintude of perturbation required to cause them to fall with the balance
+    assist system on and off. We log the order of perturbations and their
+    impulse as well as the bicycle state at the time of perturbation.
+  \item[Experiment 3] We subject X particpants riding at 12~\si{\kph} to
+    lateral pulsive perturbations at the front tire contact patch as they rode
+    over a kickplate. We measured the standard deviation of their steer and
+    roll motions after the disturbances.
+\end{description}
+
+\begin{figure}
   \begin{center}
-    \caption{Example of a table with a short caption.} \label{tab:tab1}
-    \begin{tabular}{|c|ccc|}
-      \hline
-      &  $x$  &  $y$  &  $z$ \\
-      \hline
-      $x'$  &  $\alpha_1$ & $\beta_1$ & $\gamma_1$ \\
-      $y'$  &  $\alpha_2$ & $\beta_2$ & $\gamma_2$ \\
-      $z'$  &  $\alpha_3$ & $\beta_3$ & $\gamma_3$ \\
-      \hline
-    \end{tabular}
+    \subcaptionbox{Experiment 1}{\includegraphics[width=40mm]{example-image-a}}
+    \subcaptionbox{Experiment 2}{\includegraphics[width=40mm]{example-image-b}}
+    \subcaptionbox{Experiment 3}{\includegraphics[width=40mm]{example-image-c}}
+    \label{fig:fig1}
   \end{center}
-\end{table}
-All figures should be clearly readable and relevant to the presented text. Use
-of at least 300\,dpi resolution for pictures and 600\,dpi for line art is
-required, 1\,px wide lines in figures should be avoided as they may become
-invisible in print. There is no limit on the amount of figures as long as they
-do not dominate the text and the total length of the paper is within the
-specified limits. Both figures and tables should be centred on the page.
-
-\begin{figure}[h!]
-\begin{center}
-  \includegraphics[width=55mm]{figure1}
-  \caption{An example of a figure caption. Use 10~pt Times New Roman.
-           For long captions, use a text width of 13~cm.
-           Use the same style for the tables.} \label{fig:fig1}
-\end{center}
 \end{figure}
-Figures, graphs and tables must be included in the same style as shown for
-Figure~\ref{fig:fig1} and Table~\ref{tab:tab1}.
 
-\subsection{References}
-%
-Bibliographical citations should be written in the order in which they are
-cited, see the References section below, where Reference~\cite{Pac02}
-exemplifies the case of a textbook, while Reference~\cite{Ber07} is an article
-in conference proceedings and Reference~\cite{Sha71} is an article in a
-journal. Use can be made of a pre-existing bibtex style which uses a similar
-style.
+We apply multivariate linear regression to the performance metrics derived from
+each experiment (ANOVA Experiments 1 \& 3, logistic Experiment 2) and
+investigate whether the balance assist system reduce response motions
+(Experiments 1 \& 3) or if the probability of falling is reduced (Experiment
+2).
+
+\section{Results}
 
 \thispagestyle{empty}
-
-\section{PROCEEDINGS}
-%
-The final version of your extended abstract will be part of the proceedings.
 
 \section{CONCLUSIONS}
 %
